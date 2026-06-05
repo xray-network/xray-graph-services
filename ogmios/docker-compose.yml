@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  ogmios:
+    image: cardanosolutions/ogmios:latest
+    container_name: ogmios
+    restart: unless-stopped
+    ports:
+      - "1337:1337"
+    volumes:
+      - ./cardano/ipc:/ipc
+      - ./cardano/config:/config
+    command:
+      - --host
+      - 0.0.0.0
+      - --node-socket
+      - /ipc/node.socket
+      - --node-config
+      - /config/mainnet/config.json
