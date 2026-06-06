@@ -1,0 +1,41 @@
+services:
+  cardano-db-sync:
+    build:
+      context: .
+      target: cardano-db-sync
+    command:
+      - "--config"
+      - config/config.json
+      - "--socket-path"
+      - /node-ipc/node.socket
+    environment:
+      - EKG=Y
+      - RESTORE_SNAPSHOT=${RESTORE_SNAPSHOT:-}
+      - RESTORE_RECREATE_DB=N
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-cexplorer}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    depends_on:
+      - cardano-node-ogmios
+      - postgres
+    volumes:
+      - ./snapshots:/snapshots
+      - ../volumes/cardano-node-${NETWORK}-${CARDANO_NODE_ID}/config:/cardano-config
+      - ./config/${NETWORK}:/config
+      - node-ipc:/node-ipc
+      - db-sync-data:/var/lib/cexplorer
+    networks:
+      - xray-graph-services
+    restart: on-failure
+    stop_signal: SIGINT
+    logging:
+      driver: local
+      options:
+        max-size: 200k
+        max-file: "10"
+
+networks:
+  xray-graph-services:
+    name: xray-graph-services
