@@ -1,0 +1,2 @@
+DROP EXTENSION IF EXISTS pg_cardano;
+CREATE EXTENSION pg_cardano;

@@ -1,6 +1,8 @@
 services:
   postgres:
-    image: timescale/timescaledb:latest-pg17
+    build:
+      context: .
+      target: postgres
     container_name: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -10,6 +12,8 @@ services:
     shm_size: 2gb
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./config/postgresql.conf:/etc/postgresql.conf
+      - ./config/01_init.sql:/docker-entrypoint-initdb.d/01_init.sql
     networks:
       - xray-graph-services
     restart: unless-stopped

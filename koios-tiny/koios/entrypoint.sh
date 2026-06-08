@@ -3,8 +3,8 @@
 WORKDIR=$HOME
 PGDATABASE=${POSTGRES_DB}
 
-SHELLEY_GENESIS_JSON=${WORKDIR}/cardano-configurations/network/${NETWORK}/genesis/shelley.json
-ALONZO_GENESIS_JSON=${WORKDIR}/cardano-configurations/network/${NETWORK}/genesis/alonzo.json
+SHELLEY_GENESIS_JSON=${WORKDIR}/cardano-configurations/shelley-genesis.json
+ALONZO_GENESIS_JSON=${WORKDIR}/cardano-configurations/alonzo-genesis.json
 RPC_SCRIPTS_DIR=${WORKDIR}/rpc
 CRON_SCRIPTS_DIR=${WORKDIR}/cron
 
@@ -30,6 +30,12 @@ check_db_status() {
   fi
 
   return 0
+}
+
+register_pg_cardano() {
+  printf "\nRegistering PG_CARDANO extension if not exist..."
+  psql "${PGDATABASE}" -qt -c "CREATE EXTENSION IF NOT EXISTS pg_cardano CASCADE;" &>/dev/null
+  printf "\n  Done!"
 }
 
 reset_grest_schema() {
@@ -166,6 +172,7 @@ deploy_koios() {
     err_exit "Please wait for Cardano DBSync to populate PostgreSQL DB at least until Alonzo fork"
   fi
 
+  register_pg_cardano
   reset_grest_schema
   setup_db_basics
   deploy_query_updates

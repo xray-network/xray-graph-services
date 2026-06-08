@@ -1,7 +1,13 @@
 #############################################################################################
-### KOIOS ###
+### KOIOS-TINY ###
 
-FROM alpine:latest AS koios
+FROM alpine:latest AS koios-tiny
+
+# Env vars
+ARG NETWORK
+ARG CARDANO_NODE_ID
+ENV NETWORK=${NETWORK}
+ENV CARDANO_NODE_ID=${CARDANO_NODE_ID}
 
 # Installing packages...
 RUN apk add --no-cache dcron libcap bash nano jq git postgresql-client
@@ -14,16 +20,16 @@ ENV \
 # Copying config & files
 WORKDIR /home/postgres
 COPY --from=postgrest/postgrest /bin/postgrest /bin
-COPY config/postgrest/postgrest.conf .
-COPY koios/entrypoint.sh .
-COPY config/cardano-configurations cardano-configurations
+COPY koios-tiny/config/postgrest.conf .
+COPY koios-tiny/koios/entrypoint.sh .
+COPY volumes/cardano-node-${NETWORK}-${CARDANO_NODE_ID}/config cardano-configurations
 
-COPY koios/koios-artifacts/files/grest/rpc rpc
-COPY koios/extra-rpc rpc/extra-rpc
+COPY koios-tiny/koios/koios-artifacts/files/grest/rpc rpc
+COPY koios-tiny/koios/extra-rpc rpc/extra-rpc
 
-COPY koios/koios-artifacts/files/grest/cron/jobs cron
-COPY koios/extra-cron-jobs cron
-COPY koios/cron-schedule /var/spool/cron/crontabs/postgres
+COPY koios-tiny/koios/koios-artifacts/files/grest/cron/jobs cron
+COPY koios-tiny/koios/extra-cron-jobs cron
+COPY koios-tiny/koios/cron-schedule /var/spool/cron/crontabs/postgres
 
 # Adding permissions and setting the cron to run as the "postgres" user
 RUN chmod +x cron/*
@@ -45,27 +51,13 @@ ENTRYPOINT ["./entrypoint.sh"]
 
 
 #############################################################################################
-### OGMIOS-PROXY ###
+### KOIOS-TINY-RAPIDOC ###
 
-FROM node:20 AS ogmios-proxy
-
-WORKDIR /usr/src/app
-
-COPY ogmios-proxy .
-RUN yarn install
-
-EXPOSE 8700/tcp
-CMD [ "node", "index.js" ]
-
-
-#############################################################################################
-### RAPIDOC-KOIOS ###
-
-FROM node:20 AS rapidoc-koios
+FROM node:20 AS koios-tiny-rapidoc
 
 WORKDIR /usr/src/app
 
-COPY rapidoc-koios .
+COPY koios-tiny/rapidoc .
 RUN yarn install
 
 EXPOSE 2700/tcp
