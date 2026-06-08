@@ -1,0 +1,44 @@
+services:
+  koios:
+    build:
+      context: .
+      target: koios
+    environment:
+      - NETWORK=${NETWORK}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGHOST=${POSTGRES_HOST}
+      - PGPORT=${POSTGRES_PORT}
+      - PGRST_DB_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    ports:
+      - ${KOIOS_PORT:-127.0.0.1:8050}:8050
+    depends_on:
+      - postgres
+    restart: on-failure
+    logging:
+      driver: json-file
+      options:
+        max-size: 200k
+        max-file: "10"
+
+  rapidoc:
+    build:
+      context: .
+      target: rapidoc-koios
+    ports:
+      - ${RAPIDOC_KOIOS_PORT:-127.0.0.1:2700}:2700
+    restart: on-failure
+    logging:
+      driver: json-file
+      options:
+        max-size: 200k
+        max-file: "10"
+
+volumes:
+  db-sync-data:
+  node-db:
+  node-ipc:
+  postgres-data:
