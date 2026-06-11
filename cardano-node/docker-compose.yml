@@ -1,12 +1,4 @@
 services:
-  config-init:
-    image: ghcr.io/intersectmbo/cardano-node:11.0.1
-    container_name: cardano-node-config-init-${NETWORK}-${ID}
-    entrypoint: >
-      sh -c "cp -rn /opt/cardano/config/${NETWORK}/. /config-out/"
-    volumes:
-      - ../volumes/cardano-node-${NETWORK}-${ID}/config:/config-out
-
   cardano-node:
     image: ghcr.io/intersectmbo/cardano-node:11.0.1
     container_name: cardano-node-${NETWORK}-${ID}
@@ -17,12 +9,23 @@ services:
     volumes:
       - ../volumes/cardano-node-${NETWORK}-${ID}/db:/data/db
       - ../volumes/cardano-node-${NETWORK}-${ID}/ipc:/ipc
-      - ../volumes/cardano-node-${NETWORK}-${ID}/config:/opt/cardano/config/${NETWORK}
+      - ../volumes/cardano-node-${NETWORK}-${ID}/config:/config
+    entrypoint:
+      - bash
+      - -c
+      - |
+        cp -rn /opt/cardano/config/$NETWORK/. /config/
+        rm -rf /opt/cardano/config/$NETWORK
+        ln -s /config /opt/cardano/config/$NETWORK
+        exec /usr/local/bin/entrypoint "$@"
+      - --
     networks:
       - xray-graph-services
-    depends_on:
-      config-init:
-        condition: service_completed_successfully
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
 
 networks:
   xray-graph-services:

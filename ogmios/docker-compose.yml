@@ -1,0 +1,19 @@
+services:
+  ogmios:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ogmios-${NETWORK}-${ID}
+    ports:
+      - ${OGMIOS_PORT}:1337
+    volumes:
+      - ../volumes/cardano-node-${NETWORK}-${CARDANO_NODE_ID}/ipc:/ipc
+      - ../volumes/cardano-node-${NETWORK}-${CARDANO_NODE_ID}/config:/config:ro
+    command:
+      - --node-socket
+      - /ipc/node.socket
+      - --node-config
+      - /config/config.json
+      - --host
+      - "0.0.0.0"
+    restart: unless-stopped

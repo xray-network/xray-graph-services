@@ -17,6 +17,11 @@ services:
     networks:
       - xray-graph-services
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
 
 volumes:
   postgres-data:

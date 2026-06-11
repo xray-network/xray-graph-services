@@ -131,6 +131,12 @@ setup_cron_jobs() {
 
 deploy_rpc() {
   local rpc_sql_path=${1}
+
+  if [[ "$rpc_sql_path" == *"*"* ]] || [[ ! -f "$rpc_sql_path" ]]; then
+    printf "\n      \e[33mFolder is empty\e[0m (No SQL files found)"
+    return 0
+  fi
+
   local rpc_sql=$(< $rpc_sql_path)
 
   printf "\n      Deploying Function :   \e[32m$(basename ${rpc_sql_path})\e[0m"
@@ -139,7 +145,7 @@ deploy_rpc() {
 
 deploy_rpcs() {
   for d in $RPC_SCRIPTS_DIR/*/; do
-    if [[ $(basename $d) == 'db-scripts' ]] || [[ $(basename $d) == 'v0' ]]; then
+    if [[ $(basename $d) == 'db-scripts' ]] || [[ $(basename $d) == 'v0' ]] || [[ $(basename $d) == 'extra-rpc' ]]; then
       printf "\n\n    Skipping unnecessary subdir \"$(basename $d)\""
     else
       printf "\n\n    Execution pSQL from subdir \"$(basename $d)\""
@@ -149,7 +155,7 @@ deploy_rpcs() {
     fi
   done
 
-  printf "\n\n    Execution pSQL from subdir \"/extra-rpc\" (Extra RPCs)"
+  printf "\n\n    Execution pSQL \"/extra-rpc\" scripts after Koios RPCs init"
   for f in ${RPC_SCRIPTS_DIR}/extra-rpc/*.sql; do
     deploy_rpc $f
   done

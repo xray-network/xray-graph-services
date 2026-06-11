@@ -34,9 +34,9 @@ services:
       - traefik.http.middlewares.koios-tiny-${NETWORK}-${ID}.replacepathregex.replacement=/rpc/$1
     restart: on-failure
     logging:
-      driver: json-file
+      driver: "json-file"
       options:
-        max-size: 200k
+        max-size: "200k"
         max-file: "10"
 
   koios-tiny-rapidoc:
@@ -58,9 +58,9 @@ services:
       - traefik.http.routers.koios-tiny-rapidoc-${NETWORK}-${ID}.service=koios-tiny-rapidoc-${NETWORK}-${ID}
     restart: on-failure
     logging:
-      driver: json-file
+      driver: "json-file"
       options:
-        max-size: 200k
+        max-size: "200k"
         max-file: "10"
 
 networks:
