@@ -63,6 +63,32 @@ services:
         max-size: "200k"
         max-file: "10"
 
+  koios-tiny-ogmios-proxy:
+    build:
+      context: .
+      target: koios-tiny-ogmios-proxy
+    container_name: koios-tiny-ogmios-proxy-${NETWORK}-${ID}
+    environment:
+      - OGMIOS_HOST=${OGMIOS_HOST}
+      - OGMIOS_PORT=${OGMIOS_PORT}
+    ports:
+      - ${KOIOS_TINY_OGMIOS_PROXY_PORT}:8700
+    networks:
+      - xray-graph-services
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.koios-tiny-ogmios-proxy-${NETWORK}-${ID}.loadbalancer.server.port=8700
+      - traefik.http.routers.koios-tiny-ogmios-proxy-${NETWORK}-${ID}.rule=(Header(`X-XRAY-GRAPH-ID`,`koios-tiny-${NETWORK}-${ID}`) && (PathPrefix(`/submittx`) || PathPrefix(`/ogmios`)))
+      - traefik.http.routers.koios-tiny-ogmios-proxy-${NETWORK}-${ID}.entrypoints=websecure
+      - traefik.http.routers.koios-tiny-ogmios-proxy-${NETWORK}-${ID}.tls=true
+      - traefik.http.routers.koios-tiny-ogmios-proxy-${NETWORK}-${ID}.service=koios-tiny-ogmios-proxy-${NETWORK}-${ID}
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
 networks:
   xray-graph-services:
     name: xray-graph-services

@@ -16,4 +16,22 @@ services:
       - /config/config.json
       - --host
       - "0.0.0.0"
+    networks:
+      - xray-graph-services
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.ogmios-${NETWORK}-${ID}.loadbalancer.server.port=1337
+      - traefik.http.routers.ogmios-${NETWORK}-${ID}.rule=Header(`X-XRAY-GRAPH-ID`,`ogmios-${NETWORK}-${ID}`)
+      - traefik.http.routers.ogmios-${NETWORK}-${ID}.entrypoints=websecure
+      - traefik.http.routers.ogmios-${NETWORK}-${ID}.tls=true
+      - traefik.http.routers.ogmios-${NETWORK}-${ID}.service=ogmios-${NETWORK}-${ID}
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+networks:
+  xray-graph-services:
+    name: xray-graph-services

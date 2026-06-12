@@ -51,6 +51,20 @@ ENTRYPOINT ["./entrypoint.sh"]
 
 
 #############################################################################################
+### OGMIOS-PROXY ###
+
+FROM node:20 AS koios-tiny-ogmios-proxy
+
+WORKDIR /usr/src/app
+
+COPY ogmios-proxy .
+RUN yarn install
+
+EXPOSE 8700/tcp
+CMD [ "node", "index.js" ]
+
+
+#############################################################################################
 ### KOIOS-TINY-RAPIDOC ###
 
 FROM node:20 AS koios-tiny-rapidoc
