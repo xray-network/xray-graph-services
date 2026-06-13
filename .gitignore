@@ -3,3 +3,6 @@
 !**/.env.example
 volumes/*
 !volumes/.gitkeep
+**/node_modules
+**/dist
+**/build
