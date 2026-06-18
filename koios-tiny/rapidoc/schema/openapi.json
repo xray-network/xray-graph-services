@@ -11,7 +11,7 @@
       "name": "Creative Commons Attribution 4.0 International",
       "url": "https://github.com/cardano-community/koios-artifacts/blob/main/LICENSE"
     },
-    "version": "v1.3.2",
+    "version": "v1.4.0",
     "description": "\n  <div style=\"background: #efefef;padding: 20px 30px;margin-top: 30px;border-left: 5px solid #1940ED;\">\n    <div style=\"font-size:12px; font-weight:bold;margin-bottom:10px;\">DESCRIPTION</div>\n    <div>\n      <p>XRAY/Graph Koios Tiny is a distributed API service for Cardano, built on the foundation of the open-source Koios API and inspired by the Koios team's exceptional work. It delivers the same reliable schema and data access in a lightweight, horizontally scalable architecture—designed for developers and platforms that need fast, efficient, and redundant access to Cardano blockchain data.</p>\n    </div>\n  </div>\n  <div style=\"background: #efefef;padding: 20px 30px;margin-top: 30px;border-left: 5px solid #1940ED;\">\n    <div style=\"font-size:12px; font-weight:bold;margin-bottom:10px;\">AUTHENTICATION & HIGHER USAGE LIMITS</div>\n    <div>\n      <p>For high-traffic applications, we recommend using the paid XRAY/Graph or original Koios API access (set Authorization header in Authentication section):</p>\n      <ul>\n        <li>XRAY/Graph: <a href=\"https://xray.app\">https://xray.app</a></li>\n        <li>Koios: <a href=\"https://koios.rest/\">https://koios.rest/</a></li>\n      </ul>\n    </div>\n  </div>\n  <br /><br /><hr /><br /><br />\nKoios is best described as a Decentralized and Elastic RESTful query layer for exploring data on Cardano blockchain to consume within applications/wallets/explorers/etc. This page not only provides an OpenAPI Spec for live implementation, but also ability to execute live demo from client browser against each endpoint with pre-filled examples.\n\n# API Usage\n\nThe endpoints served by Koios can be browsed from the left side bar of this site. You will find that almost each endpoint has an example that you can `Try` and will help you get an example in shell using cURL. For public queries, you do not need to register yourself - you can simply use them as per the examples provided on individual endpoints. But in addition, the [PostgREST API](https://postgrest.org/en/stable/api.html) used underneath provides a handful of features that can be quite handy for you to improve your queries to directly grab very specific information pertinent to your calls, reducing data you download and process.\n\n## Vertical Filtering\n\nInstead of returning entire row, you can elect which rows you would like to fetch from the endpoint by using the `select` parameter with corresponding columns separated by commas. See example below (first is complete information for tip, while second command gives us 3 columns we are interested in):<br><br>\n\n``` bash\ncurl \"https://api.koios.rest/api/v1/tip\"\n\n# [{\"hash\":\"4d44c8a453e677f933c3df42ebcf2fe45987c41268b9cfc9b42ae305e8c3d99a\",\"epoch_no\":317,\"abs_slot\":51700871,\"epoch_slot\":120071,\"block_height\":6806994,\"block_time\":1643267162}]\n\ncurl \"https://api.koios.rest/api/v1/blocks?select=epoch_no,epoch_slot,block_height\"\n\n# [{\"epoch_no\":317,\"epoch_slot\":120071,\"block_height\":6806994}]\n```\n\n## Horizontal Filtering\n\nYou can filter the returned output based on specific conditions using operators against a column within returned result. Consider an example where you would want to query blocks minted in first 3 minutes of epoch 250 (i.e. epoch_slot was less than 180). To do so your query would look like below:<br><br>\n``` bash\ncurl \"https://api.koios.rest/api/v1/blocks?epoch_no=eq.250&epoch_slot=lt.180\"\n\n# [{\"hash\":\"8fad2808ac6b37064a0fa69f6fe065807703d5235a57442647bbcdba1c02faf8\",\"epoch_no\":250,\"abs_slot\":22636942,\"epoch_slot\":142,\"block_height\":5385757,\"block_time\":1614203233,\"tx_count\":65,\"vrf_key\":\"vrf_vk14y9pjprzlsjvjt66mv5u7w7292sxp3kn4ewhss45ayjga5vurgaqhqknuu\",\"pool\":null,\"op_cert_counter\":2},\n#  {\"hash\":\"9d33b02badaedc0dedd0d59f3e0411e5fb4ac94217fb5ee86719e8463c570e16\",\"epoch_no\":250,\"abs_slot\":22636800,\"epoch_slot\":0,\"block_height\":5385756,\"block_time\":1614203091,\"tx_count\":10,\"vrf_key\":\"vrf_vk1dkfsejw3h2k7tnguwrauqfwnxa7wj3nkp3yw2yw3400c4nlkluwqzwvka6\",\"pool\":null,\"op_cert_counter\":2}]\n```\n\nHere, we made use of `eq.` operator to denote a filter of \"value equal to\" against `epoch_no` column. Similarly, we added a filter using `lt.` operator to denote a filter of \"values lower than\" against `epoch_slot` column. You can find a complete list of operators supported in PostgREST documentation (commonly used ones extracted below):\n\n|Abbreviation|In PostgreSQL|Meaning                                    |\n|------------|-------------|-------------------------------------------|\n|eq          |`=`          |equals                                     |\n|gt          |`>`          |greater than                               |\n|gte         |`>=`         |greater than or equal                      |\n|lt          |`<`          |less than                                  |\n|lte         |`<=`         |less than or equal                         |\n|neq         |`<>` or `!=` |not equal                                  |\n|like        |`LIKE`       |LIKE operator (use * in place of %)        |\n|in          |`IN`         |one of a list of values, e.g. `?a=in.(\"hi,there\",\"yes,you\")`|\n|is          |`IS`         |checking for exact equality (null,true,false,unknown)|\n|cs          |`@>`         |contains e.g. `?tags=cs.{example, new}`    |\n|cd          |`<@`         |contained in e.g. `?values=cd.{1,2,3}`     |\n|not         |`NOT`        |negates another operator                   |\n|or          |`OR`         |logical `OR` operator                      |\n|and         |`AND`        |logical `AND` operator                     |\n\n## Pagination (offset/limit)\n\nWhen you query any endpoint in PostgREST, the number of observations returned will be limited to a maximum of 1000 rows (set via `max-rows` config option in the `grest.conf` file. This - however - is a result of a paginated call, wherein the [ up to ] 1000 records you see without any parameters is the first page. If you want to see the next 1000 results, you can always append `offset=1000` to view the next set of results. But what if 1000 is too high for your use-case and you want smaller page? Well, you can specify a smaller limit using parameter `limit`, which will see shortly in an example below. The obvious question at this point that would cross your mind is - how do I know if I need to offset and what range I am querying? This is where headers come in to your aid.  \n\nThe default headers returned by PostgREST will include a `Content-Range` field giving a range of observations returned. For large tables, this range could include a wildcard `*` as it is expensive to query exact count of observations from endpoint. But if you would like to get an estimate count without overloading servers, PostgREST can utilise Postgres's own maintenance thread results (which maintain stats for each table) to provide you a count, by specifying a header `\"Prefer: count=estimated\"`.  \n\nSounds confusing? Let's see this in practice, to hopefully make it easier.\nConsider a simple case where I want query `blocks` endpoint for `block_height` column and focus on `content-range` header to monitor the rows we discussed above.<br><br>\n\n``` bash\ncurl -s \"https://api.koios.rest/api/v1/blocks?select=block_height\" -I | grep -i content-range\n\n# content-range: 0-999/*\n\n```\n\nAs we can see above, the number of observations returned was 1000 (range being 0-999), but the total size was not queried to avoid wait times. Now, let's modify this default behaviour to query rows beyond the first 999, but this time - also add another clause to limit results by 500. We can do this using `offset=1000` and `limit=500` as below:<br><br>\n\n``` bash\ncurl -s \"https://api.koios.rest/api/v1/blocks?select=block_height&offset=1000&limit=500\" -I | grep -i content-range\n\n# content-range: 1000-1499/*\n\n```\n\nThe above methods for pagination are very useful to keep some of the queries light as well as process the output in smaller pages, making better use of your resources and respecting server timeouts for response times.\nHowever, note that due to the complex nature of some queries that require pre-processing before being subjected to paginations, these may not always be helpful to avoid server timeouts.\n\n## Ordering\n\nYou can set a sorting order for returned queries against specific column(s).\nConsider example where you want to check `epoch_no` and `epoch_slot` for the first 5 blocks created by a particular pool, i.e. you can set order to ascending based on block_height column and add horizontal filter for that pool ID as below:<br><br>\n\n``` bash\ncurl -s \"https://api.koios.rest/api/v1/blocks?pool=eq.pool155efqn9xpcf73pphkk88cmlkdwx4ulkg606tne970qswczg3asc&order=block_height.asc&limit=5\"\n\n# [{\"hash\":\"610b4c7bbebeeb212bd002885048cc33154ba29f39919d62a3d96de05d315706\",\"epoch_no\":236,\"abs_slot\":16594295,\"epoch_slot\":5495,\"block_height\":5086774,\"block_time\":1608160586,\"tx_count\":1,\"vrf_key\":\"vrf_vk18x0e7dx8j37gdxftnn8ru6jcxs7n6acdazc4ykeda2ygjwg9a7ls7ns699\",\"pool\":\"pool155efqn9xpcf73pphkk88cmlkdwx4ulkg606tne970qswczg3asc\",\"op_cert_counter\":1},\n# {\"hash\":\"d93d1db5275329ab695d30c06a35124038d8d9af64fc2b0aa082b8aa43da4164\",\"epoch_no\":236,\"abs_slot\":16597729,\"epoch_slot\":8929,\"block_height\":5086944,\"block_time\":1608164020,\"tx_count\":7,\"vrf_key\":\"vrf_vk18x0e7dx8j37gdxftnn8ru6jcxs7n6acdazc4ykeda2ygjwg9a7ls7ns699\",\"pool\":\"pool155efqn9xpcf73pphkk88cmlkdwx4ulkg606tne970qswczg3asc\",\"op_cert_counter\":1},\n# {\"hash\":\"dc9496eae64294b46f07eb20499ae6dae4d81fdc67c63c354397db91bda1ee55\",\"epoch_no\":236,\"abs_slot\":16598058,\"epoch_slot\":9258,\"block_height\":5086962,\"block_time\":1608164349,\"tx_count\":1,\"vrf_key\":\"vrf_vk18x0e7dx8j37gdxftnn8ru6jcxs7n6acdazc4ykeda2ygjwg9a7ls7ns699\",\"pool\":\"pool155efqn9xpcf73pphkk88cmlkdwx4ulkg606tne970qswczg3asc\",\"op_cert_counter\":1},\n# {\"hash\":\"6ebc7b734c513bc19290d96ca573a09cac9503c5a349dd9892b9ab43f917f9bd\",\"epoch_no\":236,\"abs_slot\":16601491,\"epoch_slot\":12691,\"block_height\":5087097,\"block_time\":1608167782,\"tx_count\":0,\"vrf_key\":\"vrf_vk18x0e7dx8j37gdxftnn8ru6jcxs7n6acdazc4ykeda2ygjwg9a7ls7ns699\",\"pool\":\"pool155efqn9xpcf73pphkk88cmlkdwx4ulkg606tne970qswczg3asc\",\"op_cert_counter\":1},\n# {\"hash\":\"2eac97548829fc312858bc56a40f7ce3bf9b0ca27ee8530283ccebb3963de1c0\",\"epoch_no\":236,\"abs_slot\":16602308,\"epoch_slot\":13508,\"block_height\":5087136,\"block_time\":1608168599,\"tx_count\":1,\"vrf_key\":\"vrf_vk18x0e7dx8j37gdxftnn8ru6jcxs7n6acdazc4ykeda2ygjwg9a7ls7ns699\",\"pool\":\"pool155efqn9xpcf73pphkk88cmlkdwx4ulkg606tne970qswczg3asc\",\"op_cert_counter\":1}]\n```\n\n## Response Formats\n\nYou can get the results from the PostgREST endpoints in CSV or JSON formats. The default response format will always be JSON, but if you'd like to switch, you can do so by specifying header `'Accept: text/csv'` or `'Accept: application/json'`.\nBelow is an example of JSON/CSV output making use of above to print first in JSON (default), and then override response format to CSV.<br><br>\n\n``` bash\ncurl -s \"https://api.koios.rest/api/v1/blocks?select=epoch_no,epoch_slot,block_time&limit=3\"\n\n# [{\"epoch_no\":318,\"epoch_slot\":27867,\"block_time\":1643606958},\n# {\"epoch_no\":318,\"epoch_slot\":27841,\"block_time\":1643606932},\n# {\"epoch_no\":318,\"epoch_slot\":27839,\"block_time\":1643606930}]\n\ncurl -s \"https://api.koios.rest/api/v1/blocks?select=epoch_no,epoch_slot,block_time&limit=3\" -H \"Accept: text/csv\"\n\n# epoch_no,epoch_slot,block_time\n# 318,28491,1643607582\n# 318,28479,1643607570\n# 318,28406,1643607497\n\n```\n\n## Limits\n\nWhile use of Koios is completely free and there are no registration requirements to the usage, the monitoring layer will only restrict spam requests that can potentially cause high amount of load to backends. The emphasis is on using list of objects first, and then [bulk where available] query specific objects to drill down where possible - which forms higher performance results to consumer as well as instance provider. Some basic protection against patterns that could cause unexpected resource spikes are protected as per below:\n\n  - Burst Limit: A single IP can query an endpoint up to 100 times within 10 seconds (that's about 8.64 million requests within a day). The sleep time if a limit is crossed is minimal (60 seconds) for that IP - during which, the monitoring layer will return HTTP Status `429 - Too many requests`.  \n  - Pagination/Limits: Any query results fetched will be paginated by 1000 records (you can reduce limit and or control pagination offsets on URL itself, see API > Pagination section for more details).\n  - Query timeout: If a query from server takes more than 30 seconds, it will return a HTTP Status of `504 - Gateway timeout`. This is because we would want to ensure you're using the queries optimally, and more often than not - it would indicate that particular endpoint is not optimised (or the network connectivity is not optimal between servers).\n  - Payload size limit: Koios supports sending bulk objects to reduce networking costs as well as number of calls users spent. However, this can also become an easy attack surface. Thus, we've had to add a strict limit for request body size to be limited to 1kb for public and 5kb for registered tiers.\n\nYet, there may be cases where the above restrictions may need exceptions (for example, an explorer or a wallet might need more connections than above - going beyond the Burst Limit). For such cases, it is best to approach the team and we can work towards a solution.\n\n# Authentication\n\nWhile Koios public tier remains unauthenticated and allows queries without any authentication, it has low limits to prevent actions against an erroraneous query/loop from a consumer. There is also a Free tier which requires setting up Bearer Auth token that is linked to the owner's wallet account (which can be connected to via [Koios website](https://koios.rest/pricing/Pricing.html) ).\nThe examples across this API site already [supports authentication](/#auth), for you to use in the queries.\n\n# Community projects\n\nA big thank you to the following projects who are already starting to use Koios from early days. A list of tools, libraries and projects utilising Koios (atleast those who'd like to be named) can be found [here](https://www.koios.rest/community.html)\n",
     "x-logo": {
       "url": "https://api.koios.rest/images/koios.png"
@@ -81,6 +81,37 @@
         "summary": "Query Chain Tip",
         "description": "Get the tip info about the latest block seen by chain",
         "operationId": "tip"
+      }
+    },
+    "/era_summaries": {
+      "get": {
+        "tags": [
+          "Network"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/era_summaries"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "summary": "Get Era Summaries",
+        "description": "Get some information about each era on the network alongwith it's start epoch",
+        "operationId": "era_summaries"
       }
     },
     "/genesis": {
@@ -726,6 +757,45 @@
         "operationId": "tx_metalabels"
       }
     },
+    "/tx_by_metalabel": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/_label"
+          },
+          {
+            "$ref": "#/components/parameters/_after_block_height"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tx_by_metalabel"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "summary": "Transactions by Metadata Label",
+        "description": "Get a list of all transactions that include a specific metadata label (key)",
+        "operationId": "tx_by_metalabel"
+      }
+    },
     "/submittx": {
       "post": {
         "tags": [
@@ -799,12 +869,48 @@
         "operationId": "tx_status"
       }
     },
-    "/tx_utxos": {
-      "post": {
+    "/tx_outs_epoch": {
+      "get": {
         "tags": [
           "Transactions"
         ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/_epoch_no_reqd"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tx_outs_epoch"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "summary": "Transaction outputs by epoch",
+        "description": "Get a list of all transaction outputs for requested epoch",
+        "operationId": "tx_outs_epoch"
+      }
+    },
+    "/tx_utxos": {
+      "post": {
         "deprecated": true,
+        "tags": [
+          "Transactions"
+        ],
         "requestBody": {
           "$ref": "#/components/requestBodies/tx_ids"
         },
@@ -838,6 +944,37 @@
             "label": "Deprecated"
           }
         ]
+      }
+    },
+    "/address_list": {
+      "get": {
+        "tags": [
+          "Address"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/address_list"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "summary": "Address List",
+        "description": "Get a list of all used address on blockchain",
+        "operationId": "account_list"
       }
     },
     "/address_info": {
@@ -903,7 +1040,7 @@
             "$ref": "#/components/responses/NotFound"
           }
         },
-        "summary": "Address UTXOs",
+        "summary": "Address UTxOs",
         "description": "Get UTxO set for given addresses",
         "operationId": "address_utxos"
       }
@@ -1327,6 +1464,7 @@
     },
     "/account_updates": {
       "post": {
+        "deprecated": true,
         "tags": [
           "Stake Account"
         ],
@@ -1541,6 +1679,14 @@
         "tags": [
           "Asset"
         ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/_asset_policy"
+          },
+          {
+            "$ref": "#/components/parameters/_asset_name"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success!!",
@@ -1563,7 +1709,7 @@
           }
         },
         "summary": "Asset List",
-        "description": "Get the list of all native assets (paginated)",
+        "description": "Get the list of all native assets (paginated). Use the optional parameters to filter efficiently, bypassing the performance cost of filtering the encoded output. Results are pre-sorted by policy ID and then asset name.",
         "operationId": "asset_list"
       }
     },
@@ -1697,8 +1843,8 @@
             "$ref": "#/components/responses/NotFound"
           }
         },
-        "summary": "Asset UTXOs",
-        "description": "Get the UTXO information of a list of assets including",
+        "summary": "Asset UTxOs",
+        "description": "Get the UTxO information of a list of assets including",
         "operationId": "asset_utxos"
       }
     },
@@ -1821,6 +1967,7 @@
     },
     "/policy_asset_addresses": {
       "get": {
+        "deprecated": true,
         "tags": [
           "Asset"
         ],
@@ -1857,6 +2004,7 @@
     },
     "/policy_asset_info": {
       "get": {
+        "deprecated": true,
         "tags": [
           "Asset"
         ],
@@ -2759,6 +2907,45 @@
         "operationId": "pool_delegators_history"
       }
     },
+    "/pool_invalid_delegators": {
+      "get": {
+        "tags": [
+          "Pool"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/_pool_bech32"
+          },
+          {
+            "$ref": "#/components/parameters/_epoch_no"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/pool_invalid_delegators"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "summary": "Pool Invalid Delegators",
+        "description": "Return information about delegators for a given pool that are invalid for the specified epoch.",
+        "operationId": "pool_invalid_delegators"
+      }
+    },
     "/pool_blocks": {
       "get": {
         "tags": [
@@ -3320,8 +3507,43 @@
         "operationId": "script_redeemers"
       }
     },
+    "/reference_script_utxos": {
+      "post": {
+        "tags": [
+          "Script"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/script_hashes"
+        },
+        "responses": {
+          "200": {
+            "description": "Array of information for scripts requested",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/script_utxos"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "summary": "Reference Script UTxOs",
+        "description": "List of all unspent UTxOs with a reference script matching given script hashes",
+        "operationId": "reference_script_utxos"
+      }
+    },
     "/script_utxos": {
       "get": {
+        "deprecated": true,
         "tags": [
           "Script"
         ],
@@ -3335,7 +3557,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of UTXOs for a given script hash",
+            "description": "List of UTxOs for a given script hash",
             "content": {
               "application/json": {
                 "schema": {
@@ -3354,8 +3576,8 @@
             "$ref": "#/components/responses/NotFound"
           }
         },
-        "summary": "Script UTXOs",
-        "description": "List of all UTXOs for a given script hash",
+        "summary": "Script UTxOs",
+        "description": "List of all UTxOs for a given script hash",
         "operationId": "script_utxos"
       }
     },
@@ -3447,6 +3669,18 @@
         "in": "query",
         "required": false,
         "allowEmptyValue": true
+      },
+      "_epoch_no_reqd": {
+        "deprecated": false,
+        "name": "_epoch_no",
+        "description": "Epoch Number to fetch details for",
+        "schema": {
+          "type": "string"
+        },
+        "example": "320",
+        "in": "query",
+        "required": true,
+        "allowEmptyValue": false
       },
       "_stake_address": {
         "deprecated": false,
@@ -3660,6 +3894,18 @@
         "schema": {
           "type": "string"
         },
+        "in": "query",
+        "required": true,
+        "allowEmptyValue": false
+      },
+      "_label": {
+        "deprecated": false,
+        "name": "_label",
+        "description": "Metadata label (key) to filter transactions by",
+        "schema": {
+          "type": "number"
+        },
+        "example": 721,
         "in": "query",
         "required": true,
         "allowEmptyValue": false
@@ -4383,8 +4629,8 @@
               },
               "example": {
                 "_drep_ids": [
-                  "drep17l6sywnwqu9aedd6aumev42w39ln5zfl9nw7j4ak6u8swyrwvz3",
-                  "drep1s9q5uyddsvza4uk2n9wswy90n8wx9d2jmrq4zgcvlyv055007av"
+                  "drep1yglrf4el8gghum239fggvfrau25k2576y4dvcz65r2ukj8sqpsc2k",
+                  "drep1ytf9f78k7rkwk4cu6l2nvna22keu9yus4kqzc0hqspd36uszu0xc2"
                 ]
               }
             }
@@ -4600,6 +4846,9 @@
             "hash": {
               "$ref": "#/components/schemas/blocks/items/properties/hash"
             },
+            "era": {
+              "$ref": "#/components/schemas/era_summaries/items/properties/era"
+            },
             "epoch_no": {
               "$ref": "#/components/schemas/blocks/items/properties/epoch_no"
             },
@@ -4617,6 +4866,49 @@
             },
             "block_time": {
               "$ref": "#/components/schemas/blocks/items/properties/block_time"
+            }
+          }
+        }
+      },
+      "era_summaries": {
+        "description": "Information about each era on the network alongwith it's start epoch",
+        "type": "array",
+        "items": {
+          "properties": {
+            "era": {
+              "type": "string",
+              "example": "Conway",
+              "description": "Cardano Era"
+            },
+            "protocol_major": {
+              "$ref": "#/components/schemas/epoch_params/items/properties/protocol_major"
+            },
+            "protocol_minor": {
+              "$ref": "#/components/schemas/epoch_params/items/properties/protocol_minor"
+            },
+            "ledger_protocol": {
+              "type": "string",
+              "example": "Praos",
+              "description": "Protocol name that denotes  collection of features sitting between consensus and ledger layer"
+            },
+            "consensus_mechanism": {
+              "type": "string",
+              "example": "Ouroboros Genesis/Praos",
+              "description": "Consensus name that denotes  collection of consensus features introduced at a hard fork"
+            },
+            "notes": {
+              "type": "string",
+              "example": "Plomin HF",
+              "description": "Additional information about when this protocol update was pushed (if there is a fork name associated)"
+            },
+            "epoch_no": {
+              "$ref": "#/components/schemas/epoch_info/items/properties/epoch_no"
+            },
+            "first_block_time": {
+              "$ref": "#/components/schemas/epoch_info/items/properties/first_block_time"
+            },
+            "first_block_hash": {
+              "$ref": "#/components/schemas/epoch_params/items/properties/block_hash"
             }
           }
         }
@@ -4742,6 +5034,21 @@
             "deposits_proposal": {
               "type": "string",
               "description": "The amount (in Lovelace) in the obligation pot coming from governance proposal deposits.",
+              "example": 0
+            },
+            "treasury_donation": {
+              "type": "string",
+              "description": "The amount (in Lovelace) donated to the treasury.",
+              "example": 0
+            },
+            "treasury_withdrawal": {
+              "type": "string",
+              "description": "The amount (in Lovelace) withdrawn from the treasury.",
+              "example": 0
+            },
+            "reserves_withdrawal": {
+              "type": "string",
+              "description": "The amount (in Lovelace) withdrawn from reserves.",
               "example": 0
             }
           }
@@ -5526,6 +5833,21 @@
           }
         }
       },
+      "pool_invalid_delegators": {
+        "description": "Array of pool delegators that are invalid for the specified epoch",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "stake_address": {
+              "$ref": "#/components/schemas/account_history/items/properties/stake_address"
+            },
+            "epoch_no": {
+              "$ref": "#/components/schemas/epoch_info/items/properties/epoch_no"
+            }
+          }
+        }
+      },
       "pool_blocks": {
         "description": "Array of blocks created by pool",
         "type": "array",
@@ -5701,6 +6023,16 @@
             },
             "block_time": {
               "$ref": "#/components/schemas/blocks/items/properties/block_time"
+            },
+            "registered": {
+              "type": "boolean",
+              "description": "Flag to show if the pool has active calidus key as registered",
+              "example": true
+            },
+            "bytes": {
+              "type": "string",
+              "description": "Raw Transaction metadata in hex",
+              "example": "19029a324512"
             }
           }
         }
@@ -5765,6 +6097,9 @@
               "type": "number",
               "description": "Epoch number",
               "example": 294
+            },
+            "era": {
+              "$ref": "#/components/schemas/era_summaries/items/properties/era"
             },
             "out_sum": {
               "type": "string",
@@ -5854,6 +6189,9 @@
               "type": "number",
               "description": "Epoch number",
               "example": 294
+            },
+            "era": {
+              "$ref": "#/components/schemas/era_summaries/items/properties/era"
             },
             "min_fee_a": {
               "anyOf": [
@@ -6037,7 +6375,7 @@
                 }
               ],
               "description": "The protocol major version",
-              "example": 5
+              "example": 10
             },
             "protocol_minor": {
               "anyOf": [
@@ -6508,6 +6846,9 @@
               "description": "Protocol major version",
               "example": 2
             },
+            "era": {
+              "$ref": "#/components/schemas/era_summaries/items/properties/era"
+            },
             "blocks": {
               "type": "number",
               "description": "Amount of blocks with specified major and protocol combination",
@@ -6609,6 +6950,9 @@
             },
             "epoch_no": {
               "$ref": "#/components/schemas/blocks/items/properties/epoch_no"
+            },
+            "era": {
+              "$ref": "#/components/schemas/era_summaries/items/properties/era"
             },
             "abs_slot": {
               "$ref": "#/components/schemas/blocks/items/properties/abs_slot"
@@ -6835,6 +7179,49 @@
             },
             "plutus_contracts": {
               "$ref": "#/components/schemas/tx_info/items/properties/plutus_contracts"
+            }
+          }
+        }
+      },
+      "address_list": {
+        "description": "Array of information for address(es)",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "$ref": "#/components/schemas/utxo_infos/items/properties/address"
+            },
+            "address_hex": {
+              "type": "string",
+              "description": "Cardano address in hex format",
+              "example": "60f879af535c02e37bf77fb3b5f51d017229fe47995c37b9aca9e0091c"
+            },
+            "has_script": {
+              "$ref": "#/components/schemas/drep_info/items/properties/has_script"
+            },
+            "payment_cred": {
+              "$ref": "#/components/schemas/utxo_infos/items/properties/payment_cred"
+            },
+            "stake_address": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/account_history/items/properties/stake_address"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "stake_address_hex": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/account_list/items/properties/stake_address_hex"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           }
         }
@@ -7106,103 +7493,6 @@
               "type": "string",
               "description": "Total proposal refund for this account",
               "example": "0"
-            }
-          }
-        }
-      },
-      "utxo_infos": {
-        "description": "Array of complete UTxO information",
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "tx_hash": {
-              "type": "string",
-              "description": "Hash identifier of the transaction",
-              "example": "f144a8264acf4bdfe2e1241170969c930d64ab6b0996a4a45237b623f1dd670e"
-            },
-            "tx_index": {
-              "type": "number",
-              "description": "Index of UTxO in the transaction",
-              "example": 0
-            },
-            "address": {
-              "type": "string",
-              "description": "A Cardano payment/base address (bech32 encoded)",
-              "example": "addr1qxkfe8s6m8qt5436lec3f0320hrmpppwqgs2gah4360krvyssntpwjcz303mx3h4avg7p29l3zd8u3jyglmewds9ezrqdc3cxp"
-            },
-            "value": {
-              "$ref": "#/components/schemas/tx_info/items/properties/outputs/items/properties/value"
-            },
-            "stake_address": {
-              "$ref": "#/components/schemas/address_info/items/properties/stake_address"
-            },
-            "payment_cred": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "Payment credential",
-              "example": "de3c1c527e8826b9cd2030f88f75fc44cd4ce519b9ded9eb794b3794"
-            },
-            "epoch_no": {
-              "$ref": "#/components/schemas/blocks/items/properties/epoch_no"
-            },
-            "block_height": {
-              "$ref": "#/components/schemas/blocks/items/properties/block_height"
-            },
-            "block_time": {
-              "$ref": "#/components/schemas/blocks/items/properties/block_time"
-            },
-            "datum_hash": {
-              "$ref": "#/components/schemas/script_redeemers/items/properties/redeemers/items/properties/datum_hash"
-            },
-            "inline_datum": {
-              "$ref": "#/components/schemas/tx_info/items/properties/outputs/items/properties/inline_datum"
-            },
-            "reference_script": {
-              "$ref": "#/components/schemas/tx_info/items/properties/outputs/items/properties/reference_script"
-            },
-            "asset_list": {
-              "anyOf": [
-                {
-                  "type": "array"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "An array of assets on the UTxO",
-              "items": {
-                "properties": {
-                  "policy_id": {
-                    "$ref": "#/components/schemas/asset_info/items/properties/policy_id"
-                  },
-                  "asset_name": {
-                    "$ref": "#/components/schemas/asset_info/items/properties/asset_name"
-                  },
-                  "fingerprint": {
-                    "$ref": "#/components/schemas/asset_info/items/properties/fingerprint"
-                  },
-                  "decimals": {
-                    "$ref": "#/components/schemas/asset_info/items/properties/token_registry_metadata/properties/decimals"
-                  },
-                  "quantity": {
-                    "type": "string",
-                    "description": "Quantity of assets on the UTxO",
-                    "example": "1"
-                  }
-                }
-              }
-            },
-            "is_spent": {
-              "type": "boolean",
-              "description": "True if the UTXO has been spent",
-              "example": true
             }
           }
         }
@@ -8268,6 +8558,219 @@
           }
         }
       },
+      "tx_by_metalabel": {
+        "description": "Array of transactions containing the queried metadata label",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "tx_hash": {
+              "$ref": "#/components/schemas/utxo_infos/items/properties/tx_hash"
+            },
+            "block_hash": {
+              "$ref": "#/components/schemas/blocks/items/properties/hash"
+            },
+            "block_height": {
+              "$ref": "#/components/schemas/blocks/items/properties/block_height"
+            },
+            "epoch_no": {
+              "$ref": "#/components/schemas/blocks/items/properties/epoch_no"
+            },
+            "absolute_slot": {
+              "$ref": "#/components/schemas/blocks/items/properties/abs_slot"
+            },
+            "tx_timestamp": {
+              "$ref": "#/components/schemas/blocks/items/properties/block_time"
+            }
+          }
+        }
+      },
+      "utxo_infos": {
+        "description": "Array of complete UTxO information",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "tx_hash": {
+              "type": "string",
+              "description": "Hash identifier of the transaction",
+              "example": "f144a8264acf4bdfe2e1241170969c930d64ab6b0996a4a45237b623f1dd670e"
+            },
+            "tx_index": {
+              "type": "number",
+              "description": "Index of UTxO in the transaction",
+              "example": 0
+            },
+            "address": {
+              "type": "string",
+              "description": "A Cardano payment/base address (bech32 encoded)",
+              "example": "addr1qxkfe8s6m8qt5436lec3f0320hrmpppwqgs2gah4360krvyssntpwjcz303mx3h4avg7p29l3zd8u3jyglmewds9ezrqdc3cxp"
+            },
+            "value": {
+              "$ref": "#/components/schemas/tx_info/items/properties/outputs/items/properties/value"
+            },
+            "stake_address": {
+              "$ref": "#/components/schemas/address_info/items/properties/stake_address"
+            },
+            "payment_cred": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Payment credential",
+              "example": "de3c1c527e8826b9cd2030f88f75fc44cd4ce519b9ded9eb794b3794"
+            },
+            "epoch_no": {
+              "$ref": "#/components/schemas/blocks/items/properties/epoch_no"
+            },
+            "block_height": {
+              "$ref": "#/components/schemas/blocks/items/properties/block_height"
+            },
+            "block_time": {
+              "$ref": "#/components/schemas/blocks/items/properties/block_time"
+            },
+            "datum_hash": {
+              "$ref": "#/components/schemas/script_redeemers/items/properties/redeemers/items/properties/datum_hash"
+            },
+            "inline_datum": {
+              "$ref": "#/components/schemas/tx_info/items/properties/outputs/items/properties/inline_datum"
+            },
+            "reference_script": {
+              "$ref": "#/components/schemas/tx_info/items/properties/outputs/items/properties/reference_script"
+            },
+            "asset_list": {
+              "anyOf": [
+                {
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "An array of assets on the UTxO",
+              "items": {
+                "properties": {
+                  "policy_id": {
+                    "$ref": "#/components/schemas/asset_info/items/properties/policy_id"
+                  },
+                  "asset_name": {
+                    "$ref": "#/components/schemas/asset_info/items/properties/asset_name"
+                  },
+                  "fingerprint": {
+                    "$ref": "#/components/schemas/asset_info/items/properties/fingerprint"
+                  },
+                  "decimals": {
+                    "$ref": "#/components/schemas/asset_info/items/properties/token_registry_metadata/properties/decimals"
+                  },
+                  "quantity": {
+                    "type": "string",
+                    "description": "Quantity of assets on the UTxO",
+                    "example": "1"
+                  }
+                }
+              }
+            },
+            "is_spent": {
+              "type": "boolean",
+              "description": "True if the UTxO has been spent",
+              "example": true
+            }
+          }
+        }
+      },
+      "tx_outs_epoch": {
+        "description": "List of transaction outputs with basic details for requested epoch",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "tx_hash": {
+              "type": "string",
+              "description": "Hash identifier of the transaction",
+              "example": "f144a8264acf4bdfe2e1241170969c930d64ab6b0996a4a45237b623f1dd670e"
+            },
+            "tx_index": {
+              "type": "number",
+              "description": "Index of UTxO in the transaction",
+              "example": 0
+            },
+            "address": {
+              "type": "string",
+              "description": "A Cardano payment/base address (bech32 encoded)",
+              "example": "addr1qxkfe8s6m8qt5436lec3f0320hrmpppwqgs2gah4360krvyssntpwjcz303mx3h4avg7p29l3zd8u3jyglmewds9ezrqdc3cxp"
+            },
+            "stake_address": {
+              "$ref": "#/components/schemas/address_info/items/properties/stake_address"
+            },
+            "payment_cred": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Payment credential",
+              "example": "de3c1c527e8826b9cd2030f88f75fc44cd4ce519b9ded9eb794b3794"
+            },
+            "epoch_no": {
+              "$ref": "#/components/schemas/blocks/items/properties/epoch_no"
+            },
+            "block_height": {
+              "$ref": "#/components/schemas/blocks/items/properties/block_height"
+            },
+            "block_time": {
+              "$ref": "#/components/schemas/blocks/items/properties/block_time"
+            },
+            "value": {
+              "$ref": "#/components/schemas/tx_info/items/properties/outputs/items/properties/value"
+            },
+            "datum_hash": {
+              "$ref": "#/components/schemas/script_redeemers/items/properties/redeemers/items/properties/datum_hash"
+            },
+            "is_spent": {
+              "type": "boolean",
+              "description": "True if the UTxO has been spent",
+              "example": true
+            }
+          }
+        }
+      },
+      "tx_treasury_donations_epoch": {
+        "description": "List of treasury donation transactions for requested epoch (current if NULL)",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "epoch_no": {
+              "$ref": "#/components/schemas/blocks/items/properties/epoch_no"
+            },
+            "tx_hash": {
+              "$ref": "#/components/schemas/utxo_infos/items/properties/tx_hash"
+            },
+            "block_hash": {
+              "$ref": "#/components/schemas/blocks/items/properties/hash"
+            },
+            "tx_block_index": {
+              "$ref": "#/components/schemas/tx_info/items/properties/tx_block_index"
+            },
+            "block_height": {
+              "$ref": "#/components/schemas/blocks/items/properties/block_height"
+            },
+            "block_time": {
+              "$ref": "#/components/schemas/blocks/items/properties/block_time"
+            },
+            "treasury_donation": {
+              "$ref": "#/components/schemas/tx_info/items/properties/treasury_donation"
+            }
+          }
+        }
+      },
       "asset_list": {
         "description": "Array of policy IDs and asset names",
         "type": "array",
@@ -8752,10 +9255,15 @@
               "description": "Flag which shows if this credential is a script hash",
               "example": false
             },
-            "registered": {
-              "type": "boolean",
-              "description": "Flag to show if the DRep is currently registered",
-              "example": false
+            "drep_status": {
+              "type": "string",
+              "enum": [
+                "registered",
+                "deregistered",
+                "not_registered"
+              ],
+              "description": "DRep's current registration status",
+              "example": "registered"
             },
             "deposit": {
               "anyOf": [
@@ -8853,8 +9361,8 @@
             "has_script": {
               "$ref": "#/components/schemas/drep_info/items/properties/has_script"
             },
-            "registered": {
-              "$ref": "#/components/schemas/drep_info/items/properties/registered"
+            "drep_status": {
+              "$ref": "#/components/schemas/drep_info/items/properties/drep_status"
             }
           }
         }
@@ -9044,7 +9552,7 @@
                   "type": "null"
                 }
               ],
-              "description": "Indicate whether data is invalid (currently returns null for all as per dbsync)",
+              "description": "Indicate whether data is invalid",
               "example": null
             }
           }
@@ -9267,7 +9775,7 @@
                   "type": "null"
                 }
               ],
-              "description": "If not null, then this proposal has been ratified at the specfied epoch.",
+              "description": "If not null, then this proposal has been ratified at the specified epoch.",
               "example": 670
             },
             "enacted_epoch": {
@@ -9279,7 +9787,7 @@
                   "type": "null"
                 }
               ],
-              "description": "If not null, then this proposal has been enacted at the specfied epoch.",
+              "description": "If not null, then this proposal has been enacted at the specified epoch.",
               "example": 675
             },
             "dropped_epoch": {
@@ -9291,7 +9799,7 @@
                   "type": "null"
                 }
               ],
-              "description": "If not null, then this proposal has been dropped (expired/enacted) at the specfied epoch.",
+              "description": "If not null, then this proposal has been dropped (expired/enacted) at the specified epoch.",
               "example": 680
             },
             "expired_epoch": {
@@ -9303,7 +9811,7 @@
                   "type": "null"
                 }
               ],
-              "description": "If not null, then this proposal has been expired at the specfied epoch.",
+              "description": "If not null, then this proposal has been expired at the specified epoch.",
               "example": 680
             },
             "expiration": {
@@ -9336,22 +9844,17 @@
               "$ref": "#/components/schemas/drep_metadata/items/properties/is_valid"
             },
             "withdrawal": {
-              "anyOf": [
-                {
-                  "type": "object"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "If not null, the amount withdrawn from treasury into stake address by this this proposal",
-              "properties": {
-                "stake_address": {
-                  "$ref": "#/components/schemas/account_history/items/properties/stake_address"
-                },
-                "amount": {
-                  "type": "string",
-                  "example": "31235800000"
+              "type": "array",
+              "description": "The array of amounts withdrawn from treasury into specified stake addresses by this proposal",
+              "items": {
+                "properties": {
+                  "stake_address": {
+                    "$ref": "#/components/schemas/account_history/items/properties/stake_address"
+                  },
+                  "amount": {
+                    "type": "string",
+                    "example": "31235800000"
+                  }
                 }
               }
             },
@@ -9893,6 +10396,23 @@
                   }
                 }
               }
+            }
+          }
+        }
+      },
+      "script_utxos": {
+        "description": "List of all unspent utxos with a reference script matching given script hashes",
+        "type": "array",
+        "items": {
+          "properties": {
+            "script_hash": {
+              "$ref": "#/components/schemas/script_info/items/properties/script_hash"
+            },
+            "tx_hash": {
+              "$ref": "#/components/schemas/utxo_infos/items/properties/tx_hash"
+            },
+            "tx_index": {
+              "$ref": "#/components/schemas/utxo_infos/items/properties/tx_index"
             }
           }
         }
