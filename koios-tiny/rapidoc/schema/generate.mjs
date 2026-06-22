@@ -53,11 +53,26 @@ try {
   // Add extra description to the info section
   parsedData.info.description = extraDescription + parsedData.info.description
 
-  // Remove Security Schemes description
-  parsedData.components.securitySchemes.bearerAuth = {
-    ...parsedData.components.securitySchemes.bearerAuth,
-    description: "",
+  // Replace Security Schema
+  delete parsedData.components.securitySchemes.bearerAuth
+  parsedData.components.securitySchemes.customAuth = {
+    type: "apiKey",
+    in: "header",
+    name: "X-XRAY-GRAPH-AUTH",
+    description: "Provide your custom authentication token here.",
   }
+  parsedData.paths = Object.fromEntries(Object.entries(parsedData.paths).map(([path, methods]) => {
+    const modifiedMethods = Object.fromEntries(Object.entries(methods).map(([method, details]) => {
+      delete details.security
+      details.security = [
+        {
+          customAuth: []
+        }
+      ]
+      return [method, details]
+    }))
+    return [path, modifiedMethods]
+  }))
 
   // Remove ogmios methods from the JSON
   const ogmiosIndex = parsedData.tags.findIndex(tag => tag.name === "Ogmios")

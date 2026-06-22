@@ -80,7 +80,12 @@
         },
         "summary": "Query Chain Tip",
         "description": "Get the tip info about the latest block seen by chain",
-        "operationId": "tip"
+        "operationId": "tip",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/era_summaries": {
@@ -111,7 +116,12 @@
         },
         "summary": "Get Era Summaries",
         "description": "Get some information about each era on the network alongwith it's start epoch",
-        "operationId": "era_summaries"
+        "operationId": "era_summaries",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/genesis": {
@@ -142,7 +152,12 @@
         },
         "summary": "Get Genesis info",
         "description": "Get the Genesis parameters used to start specific era on chain",
-        "operationId": "genesis"
+        "operationId": "genesis",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/totals": {
@@ -178,7 +193,12 @@
         },
         "summary": "Get historical tokenomic stats",
         "description": "Get the circulating utxo, treasury, rewards, supply and reserves in lovelace for specified epoch, all epochs if empty",
-        "operationId": "totals"
+        "operationId": "totals",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/param_updates": {
@@ -209,7 +229,12 @@
         },
         "summary": "Param Update Proposals",
         "description": "Get all parameter update proposals submitted to the chain starting Shelley era",
-        "operationId": "param_updates"
+        "operationId": "param_updates",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/cli_protocol_params": {
@@ -240,7 +265,12 @@
         },
         "summary": "CLI Protocol Parameters",
         "description": "Get Current Protocol Parameters as published by cardano-cli. Note that the output schema of this command is unfortunately fluid on cardano-node and may vary between CLI versions/era. Accordingly, the returned output for this endpoint is left as raw JSON (single row) and any filtering to output should be done on client-side",
-        "operationId": "cli_protocol_params"
+        "operationId": "cli_protocol_params",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/reserve_withdrawals": {
@@ -271,7 +301,12 @@
         },
         "summary": "Reserve Withdrawals",
         "description": "List of all withdrawals from reserves against stake accounts",
-        "operationId": "reserve_withdrawals"
+        "operationId": "reserve_withdrawals",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/treasury_withdrawals": {
@@ -302,7 +337,12 @@
         },
         "summary": "Treasury Withdrawals",
         "description": "List of all withdrawals from treasury against stake accounts",
-        "operationId": "treasury_withdrawals"
+        "operationId": "treasury_withdrawals",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/epoch_info": {
@@ -341,7 +381,12 @@
         },
         "summary": "Epoch Information",
         "description": "Get the epoch information, all epochs if no epoch specified",
-        "operationId": "epoch_info"
+        "operationId": "epoch_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/epoch_params": {
@@ -377,7 +422,12 @@
         },
         "summary": "Epoch's Protocol Parameters",
         "description": "Get the protocol parameters for specific epoch, returns information about all epochs if no epoch specified",
-        "operationId": "epoch_params"
+        "operationId": "epoch_params",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/epoch_block_protocols": {
@@ -413,7 +463,12 @@
         },
         "summary": "Epoch's Block Protocols",
         "description": "Get the information about block protocol distribution in epoch",
-        "operationId": "epoch_block_protocols"
+        "operationId": "epoch_block_protocols",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/blocks": {
@@ -444,7 +499,12 @@
         },
         "summary": "Block List",
         "description": "Get summarised details about all blocks (paginated - latest first)",
-        "operationId": "blocks"
+        "operationId": "blocks",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/block_info": {
@@ -478,7 +538,12 @@
         },
         "summary": "Block Information",
         "description": "Get detailed information about a specific block",
-        "operationId": "block_info"
+        "operationId": "block_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/block_txs": {
@@ -512,7 +577,12 @@
         },
         "summary": "Block Transactions",
         "description": "Get a list of all transactions included in provided blocks",
-        "operationId": "block_txs"
+        "operationId": "block_txs",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/block_tx_cbor": {
@@ -546,7 +616,12 @@
         },
         "summary": "Block Transactions (Raw CBOR)",
         "description": "Get raw CBOR data for all transaction(s) within requested blocks",
-        "operationId": "block_tx_cbor"
+        "operationId": "block_tx_cbor",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/block_tx_info": {
@@ -587,6 +662,11 @@
             "color": "red",
             "label": "Deprecated"
           }
+        ],
+        "security": [
+          {
+            "customAuth": []
+          }
         ]
       }
     },
@@ -621,7 +701,12 @@
         },
         "summary": "UTxO Info",
         "description": "Get UTxO set for requested UTxO references",
-        "operationId": "utxo_info"
+        "operationId": "utxo_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/tx_cbor": {
@@ -655,7 +740,12 @@
         },
         "summary": "Raw Transaction (CBOR)",
         "description": "Get raw transaction(s) in CBOR format",
-        "operationId": "tx_cbor"
+        "operationId": "tx_cbor",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/tx_info": {
@@ -689,7 +779,12 @@
         },
         "summary": "Transaction Information",
         "description": "Get detailed information about transaction(s)",
-        "operationId": "tx_info"
+        "operationId": "tx_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/tx_metadata": {
@@ -723,7 +818,12 @@
         },
         "summary": "Transaction Metadata",
         "description": "Get metadata information (if any) for given transaction(s)",
-        "operationId": "tx_metadata"
+        "operationId": "tx_metadata",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/tx_metalabels": {
@@ -754,7 +854,12 @@
         },
         "summary": "Transaction Metadata Labels",
         "description": "Get a list of all transaction metalabels",
-        "operationId": "tx_metalabels"
+        "operationId": "tx_metalabels",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/tx_by_metalabel": {
@@ -793,7 +898,12 @@
         },
         "summary": "Transactions by Metadata Label",
         "description": "Get a list of all transactions that include a specific metadata label (key)",
-        "operationId": "tx_by_metalabel"
+        "operationId": "tx_by_metalabel",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/submittx": {
@@ -832,7 +942,12 @@
         },
         "summary": "Submit Transaction",
         "description": "Submit an already serialized transaction to the network.",
-        "operationId": "submittx"
+        "operationId": "submittx",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/tx_status": {
@@ -866,7 +981,12 @@
         },
         "summary": "Transaction Status",
         "description": "Get the number of block confirmations for a given transaction hash list",
-        "operationId": "tx_status"
+        "operationId": "tx_status",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/tx_outs_epoch": {
@@ -902,7 +1022,12 @@
         },
         "summary": "Transaction outputs by epoch",
         "description": "Get a list of all transaction outputs for requested epoch",
-        "operationId": "tx_outs_epoch"
+        "operationId": "tx_outs_epoch",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/tx_utxos": {
@@ -943,6 +1068,11 @@
             "color": "red",
             "label": "Deprecated"
           }
+        ],
+        "security": [
+          {
+            "customAuth": []
+          }
         ]
       }
     },
@@ -974,7 +1104,12 @@
         },
         "summary": "Address List",
         "description": "Get a list of all used address on blockchain",
-        "operationId": "account_list"
+        "operationId": "account_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/address_info": {
@@ -1008,7 +1143,12 @@
         },
         "summary": "Address Information",
         "description": "Get address info - balance, associated stake address (if any) and UTxO set for given addresses",
-        "operationId": "address_info"
+        "operationId": "address_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/address_utxos": {
@@ -1042,7 +1182,12 @@
         },
         "summary": "Address UTxOs",
         "description": "Get UTxO set for given addresses",
-        "operationId": "address_utxos"
+        "operationId": "address_utxos",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/address_outputs": {
@@ -1076,7 +1221,12 @@
         },
         "summary": "Address Outputs",
         "description": "Basic transaction output info for given addresses",
-        "operationId": "address_outputs"
+        "operationId": "address_outputs",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/credential_utxos": {
@@ -1110,7 +1260,12 @@
         },
         "summary": "UTxOs from payment credentials",
         "description": "Get UTxO details for requested payment credentials",
-        "operationId": "credential_utxos"
+        "operationId": "credential_utxos",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/address_txs": {
@@ -1144,7 +1299,12 @@
         },
         "summary": "Address Transactions",
         "description": "Get the transaction hash list of input address array, optionally filtering after specified block height (inclusive)",
-        "operationId": "address_txs"
+        "operationId": "address_txs",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/credential_txs": {
@@ -1178,7 +1338,12 @@
         },
         "summary": "Transactions from payment credentials",
         "description": "Get the transaction hash list of input payment credential array, optionally filtering after specified block height (inclusive)",
-        "operationId": "credential_txs"
+        "operationId": "credential_txs",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/address_assets": {
@@ -1212,7 +1377,12 @@
         },
         "summary": "Address Assets",
         "description": "Get the list of all the assets (policy, name and quantity) for given addresses",
-        "operationId": "address_assets"
+        "operationId": "address_assets",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_list": {
@@ -1243,7 +1413,12 @@
         },
         "summary": "Account List",
         "description": "Get a list of all stake addresses that have atleast 1 transaction",
-        "operationId": "account_list"
+        "operationId": "account_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_info": {
@@ -1277,7 +1452,12 @@
         },
         "summary": "Account Information",
         "description": "Get the account information for given stake addresses",
-        "operationId": "account_info"
+        "operationId": "account_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_info_cached": {
@@ -1311,7 +1491,12 @@
         },
         "summary": "Account Information (Cached)",
         "description": "Get the cached account information for given stake addresses (effective for performance query against registered accounts)",
-        "operationId": "account_info_cached"
+        "operationId": "account_info_cached",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_utxos": {
@@ -1345,7 +1530,12 @@
         },
         "summary": "UTxOs for stake addresses (accounts)",
         "description": "Get a list of all UTxOs for given stake addresses (account)s",
-        "operationId": "account_utxos"
+        "operationId": "account_utxos",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_txs": {
@@ -1384,7 +1574,12 @@
         },
         "summary": "Account Txs",
         "description": "Get a list of all Txs for a given stake address (account)",
-        "operationId": "account_txs"
+        "operationId": "account_txs",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_rewards": {
@@ -1425,6 +1620,11 @@
             "color": "red",
             "label": "Deprecated"
           }
+        ],
+        "security": [
+          {
+            "customAuth": []
+          }
         ]
       }
     },
@@ -1459,7 +1659,12 @@
         },
         "summary": "Account Reward History",
         "description": "Get the full rewards history (including MIR) for given stake addresses",
-        "operationId": "account_reward_history"
+        "operationId": "account_reward_history",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_updates": {
@@ -1494,7 +1699,12 @@
         },
         "summary": "Account Updates",
         "description": "Get the account updates (registration, deregistration, delegation and withdrawals) for given stake addresses",
-        "operationId": "account_updates"
+        "operationId": "account_updates",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_update_history": {
@@ -1528,7 +1738,12 @@
         },
         "summary": "Account Update History",
         "description": "Get the account updates (registration, deregistration, delegation and withdrawals) for given stake addresses",
-        "operationId": "account_update_history"
+        "operationId": "account_update_history",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_addresses": {
@@ -1562,7 +1777,12 @@
         },
         "summary": "Account Addresses",
         "description": "Get all addresses associated with given staking accounts",
-        "operationId": "account_addresses"
+        "operationId": "account_addresses",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_assets": {
@@ -1596,7 +1816,12 @@
         },
         "summary": "Account Assets",
         "description": "Get the native asset balance for a given stake address",
-        "operationId": "account_assets"
+        "operationId": "account_assets",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/account_history": {
@@ -1637,6 +1862,11 @@
             "color": "red",
             "label": "Deprecated"
           }
+        ],
+        "security": [
+          {
+            "customAuth": []
+          }
         ]
       }
     },
@@ -1671,7 +1901,12 @@
         },
         "summary": "Account Stake History",
         "description": "Get the staking history of given stake addresses (accounts)",
-        "operationId": "account_stake_history"
+        "operationId": "account_stake_history",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/asset_list": {
@@ -1710,7 +1945,12 @@
         },
         "summary": "Asset List",
         "description": "Get the list of all native assets (paginated). Use the optional parameters to filter efficiently, bypassing the performance cost of filtering the encoded output. Results are pre-sorted by policy ID and then asset name.",
-        "operationId": "asset_list"
+        "operationId": "asset_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/policy_asset_list": {
@@ -1746,7 +1986,12 @@
         },
         "summary": "Policy Asset List",
         "description": "Get the list of asset under the given policy (including balances)",
-        "operationId": "policy_asset_list"
+        "operationId": "policy_asset_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/asset_token_registry": {
@@ -1777,7 +2022,12 @@
         },
         "summary": "Asset Token Registry",
         "description": "Get a list of assets registered via token registry on github",
-        "operationId": "asset_token_registry"
+        "operationId": "asset_token_registry",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/asset_info": {
@@ -1811,7 +2061,12 @@
         },
         "summary": "Asset Information (Bulk)",
         "description": "Get the information of a list of assets including first minting & token registry metadata",
-        "operationId": "asset_info"
+        "operationId": "asset_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/asset_utxos": {
@@ -1845,7 +2100,12 @@
         },
         "summary": "Asset UTxOs",
         "description": "Get the UTxO information of a list of assets including",
-        "operationId": "asset_utxos"
+        "operationId": "asset_utxos",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/asset_history": {
@@ -1884,7 +2144,12 @@
         },
         "summary": "Asset History",
         "description": "Get the mint/burn history of an asset",
-        "operationId": "asset_history"
+        "operationId": "asset_history",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/asset_addresses": {
@@ -1923,7 +2188,12 @@
         },
         "summary": "Asset Addresses",
         "description": "Get the list of all addresses holding a given asset <br><br> `Note - Due to cardano's UTxO design and usage from projects, asset to addresses map can be infinite. Thus, for a small subset of active projects with millions of transactions, these might end up with timeouts (HTTP code 504) on free layer. Such large-scale projects are free to subscribe to query layers to have a dedicated cache table for themselves served via Koios.`",
-        "operationId": "asset_addresses"
+        "operationId": "asset_addresses",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/asset_nft_address": {
@@ -1962,7 +2232,12 @@
         },
         "summary": "NFT Address",
         "description": "Get the address where specified NFT currently reside on.",
-        "operationId": "asset_nft_address"
+        "operationId": "asset_nft_address",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/policy_asset_addresses": {
@@ -1999,7 +2274,12 @@
         },
         "summary": "Policy Asset Address List",
         "description": "Get the list of addresses with quantity for each asset on the given policy <br><br> `Note - Due to cardano's UTxO design and usage from projects, asset to addresses map can be infinite. Thus, for a small subset of active projects with millions of transactions, these might end up with timeouts (HTTP code 504) on free layer. Such large-scale projects are free to subscribe to query layers to have a dedicated cache table for themselves served via Koios.`",
-        "operationId": "policy_asset_addresses"
+        "operationId": "policy_asset_addresses",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/policy_asset_info": {
@@ -2036,7 +2316,12 @@
         },
         "summary": "Policy Asset Information",
         "description": "Get the information for all assets under the same policy",
-        "operationId": "policy_asset_info"
+        "operationId": "policy_asset_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/policy_asset_mints": {
@@ -2072,7 +2357,12 @@
         },
         "summary": "Policy Asset Mints",
         "description": "Get a list of mint or burn count details for all assets minted under a policy",
-        "operationId": "policy_asset_mints"
+        "operationId": "policy_asset_mints",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/asset_summary": {
@@ -2111,7 +2401,12 @@
         },
         "summary": "Asset Summary",
         "description": "Get the summary of an asset (total transactions exclude minting/total wallets include only wallets with asset balance)",
-        "operationId": "asset_summary"
+        "operationId": "asset_summary",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/asset_txs": {
@@ -2156,7 +2451,12 @@
         },
         "summary": "Asset Transactions",
         "description": "Get the list of current or all asset transaction hashes (newest first)",
-        "operationId": "asset_txs"
+        "operationId": "asset_txs",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/drep_epoch_summary": {
@@ -2192,7 +2492,12 @@
         },
         "summary": "DReps Epoch Summary",
         "description": "Summary of voting power and DRep count for each epoch",
-        "operationId": "drep_epoch_summary"
+        "operationId": "drep_epoch_summary",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/drep_list": {
@@ -2223,7 +2528,12 @@
         },
         "summary": "DReps List",
         "description": "List of all active delegated representatives (DReps)",
-        "operationId": "drep_list"
+        "operationId": "drep_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/drep_info": {
@@ -2257,7 +2567,12 @@
         },
         "summary": "DReps Info",
         "description": "Get detailed information about requested delegated representatives (DReps)",
-        "operationId": "drep_info"
+        "operationId": "drep_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/drep_metadata": {
@@ -2291,7 +2606,12 @@
         },
         "summary": "DReps Metadata",
         "description": "List metadata for requested delegated representatives (DReps)",
-        "operationId": "drep_metadata"
+        "operationId": "drep_metadata",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/drep_updates": {
@@ -2327,7 +2647,12 @@
         },
         "summary": "DReps Updates",
         "description": "List of updates for requested (or all) delegated representatives (DReps)",
-        "operationId": "drep_updates"
+        "operationId": "drep_updates",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/drep_history": {
@@ -2373,6 +2698,11 @@
             "color": "red",
             "label": "Deprecated"
           }
+        ],
+        "security": [
+          {
+            "customAuth": []
+          }
         ]
       }
     },
@@ -2412,7 +2742,12 @@
         },
         "summary": "DReps Voting Power History",
         "description": "History of DReps voting power against each (or requested) epoch",
-        "operationId": "drep_voting_power_history"
+        "operationId": "drep_voting_power_history",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/drep_votes": {
@@ -2455,6 +2790,11 @@
             "color": "red",
             "label": "Deprecated"
           }
+        ],
+        "security": [
+          {
+            "customAuth": []
+          }
         ]
       }
     },
@@ -2491,7 +2831,12 @@
         },
         "summary": "DReps Delegators",
         "description": "List of all delegators to requested delegated representative (DRep).",
-        "operationId": "drep_delegators"
+        "operationId": "drep_delegators",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/committee_info": {
@@ -2522,7 +2867,12 @@
         },
         "summary": "Committee Information",
         "description": "Information about active committee and its members",
-        "operationId": "committee_info"
+        "operationId": "committee_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/committee_votes": {
@@ -2558,7 +2908,12 @@
         },
         "summary": "Committee Votes",
         "description": "List of all votes casted by given committee member or collective",
-        "operationId": "committee_votes"
+        "operationId": "committee_votes",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/proposal_list": {
@@ -2589,7 +2944,12 @@
         },
         "summary": "Proposals List",
         "description": "List of all governance proposals",
-        "operationId": "proposal_list"
+        "operationId": "proposal_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/voter_proposal_list": {
@@ -2625,7 +2985,12 @@
         },
         "summary": "Voter's Proposal List",
         "description": "List of all governance proposals for specified DRep, SPO or Committee credential",
-        "operationId": "voter_proposal_list"
+        "operationId": "voter_proposal_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/proposal_voting_summary": {
@@ -2661,7 +3026,12 @@
         },
         "summary": "Proposal Voting Summary",
         "description": "Summary of votes for given proposal",
-        "operationId": "proposal_voting_summary"
+        "operationId": "proposal_voting_summary",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/proposal_votes": {
@@ -2697,7 +3067,12 @@
         },
         "summary": "Proposal Votes",
         "description": "List of all votes cast on specified governance action",
-        "operationId": "proposal_votes"
+        "operationId": "proposal_votes",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/vote_list": {
@@ -2728,7 +3103,12 @@
         },
         "summary": "Vote List",
         "description": "List of all votes posted on-chain",
-        "operationId": "vote_list"
+        "operationId": "vote_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_list": {
@@ -2759,7 +3139,12 @@
         },
         "summary": "Pool List",
         "description": "List of brief info for all pools",
-        "operationId": "pool_list"
+        "operationId": "pool_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_info": {
@@ -2793,7 +3178,12 @@
         },
         "summary": "Pool Information",
         "description": "Current pool statuses and details for a specified list of pool ids",
-        "operationId": "pool_info"
+        "operationId": "pool_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_stake_snapshot": {
@@ -2829,7 +3219,12 @@
         },
         "summary": "Pool Stake Snapshot",
         "description": "Returns Mark, Set and Go stake snapshots for the selected pool, useful for leaderlog calculation",
-        "operationId": "pool_stake_snapshot"
+        "operationId": "pool_stake_snapshot",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_delegators": {
@@ -2865,7 +3260,12 @@
         },
         "summary": "Pool Delegators List",
         "description": "Return information about live delegators for a given pool.",
-        "operationId": "pool_delegators"
+        "operationId": "pool_delegators",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_delegators_history": {
@@ -2904,7 +3304,12 @@
         },
         "summary": "Pool Delegators History",
         "description": "Return information about active delegators (incl. history) for a given pool and epoch number (all epochs if not specified).",
-        "operationId": "pool_delegators_history"
+        "operationId": "pool_delegators_history",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_invalid_delegators": {
@@ -2943,7 +3348,12 @@
         },
         "summary": "Pool Invalid Delegators",
         "description": "Return information about delegators for a given pool that are invalid for the specified epoch.",
-        "operationId": "pool_invalid_delegators"
+        "operationId": "pool_invalid_delegators",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_blocks": {
@@ -2982,7 +3392,12 @@
         },
         "summary": "Pool Blocks",
         "description": "Return information about blocks minted by a given pool for all epochs (or _epoch_no if provided)",
-        "operationId": "pool_blocks"
+        "operationId": "pool_blocks",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_owner_history": {
@@ -3016,7 +3431,12 @@
         },
         "summary": "Pool Owner History",
         "description": "Return information about pool owner's historical stake and their promised pledge to their pools",
-        "operationId": "pool_owner_history"
+        "operationId": "pool_owner_history",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_history": {
@@ -3055,7 +3475,12 @@
         },
         "summary": "Pool Stake, Block and Reward History",
         "description": "Return information about pool stake, block and reward history in a given epoch _epoch_no (or all epochs that pool existed for, in descending order if no _epoch_no was provided)",
-        "operationId": "pool_history"
+        "operationId": "pool_history",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_updates": {
@@ -3091,7 +3516,12 @@
         },
         "summary": "Pool Updates (History)",
         "description": "Return all pool updates for all pools or only updates for specific pool if specified",
-        "operationId": "pool_updates"
+        "operationId": "pool_updates",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_registrations": {
@@ -3127,7 +3557,12 @@
         },
         "summary": "Pool Registrations",
         "description": "Return all pool registrations initiated in the requested epoch",
-        "operationId": "pool_registrations"
+        "operationId": "pool_registrations",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_retirements": {
@@ -3163,7 +3598,12 @@
         },
         "summary": "Pool Retirements",
         "description": "Return all pool retirements initiated in the requested epoch",
-        "operationId": "pool_retirements"
+        "operationId": "pool_retirements",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_relays": {
@@ -3194,7 +3634,12 @@
         },
         "summary": "Pool Relays",
         "description": "A list of registered relays for all pools",
-        "operationId": "pool_relays"
+        "operationId": "pool_relays",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_voting_power_history": {
@@ -3233,7 +3678,12 @@
         },
         "summary": "Pool's Voting Power History",
         "description": "History of Pool voting power against each (or requested) epoch",
-        "operationId": "pool_voting_power_history"
+        "operationId": "pool_voting_power_history",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_votes": {
@@ -3276,6 +3726,11 @@
             "color": "red",
             "label": "Deprecated"
           }
+        ],
+        "security": [
+          {
+            "customAuth": []
+          }
         ]
       }
     },
@@ -3307,7 +3762,12 @@
         },
         "summary": "Pool Groups",
         "description": "List of all registered pool and their groups across sources from [pool_groups](https://github.com/cardano-community/pool_groups) repository. This is only relevant for mainnet",
-        "operationId": "pool_groups"
+        "operationId": "pool_groups",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_metadata": {
@@ -3341,7 +3801,12 @@
         },
         "summary": "Pool Metadata",
         "description": "Metadata (on & off-chain) for all pools",
-        "operationId": "pool_metadata"
+        "operationId": "pool_metadata",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/pool_calidus_keys": {
@@ -3372,7 +3837,12 @@
         },
         "summary": "Pool Calidus Keys",
         "description": "List of valid calidus keys for all pools",
-        "operationId": "pool_calidus_keys"
+        "operationId": "pool_calidus_keys",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/script_info": {
@@ -3406,7 +3876,12 @@
         },
         "summary": "Script Information",
         "description": "List of script information for given script hashes",
-        "operationId": "script_info"
+        "operationId": "script_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/native_script_list": {
@@ -3437,7 +3912,12 @@
         },
         "summary": "Native Script List",
         "description": "List of all existing native script hashes along with their creation transaction hashes",
-        "operationId": "native_script_list"
+        "operationId": "native_script_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/plutus_script_list": {
@@ -3468,7 +3948,12 @@
         },
         "summary": "Plutus Script List",
         "description": "List of all existing Plutus script hashes along with their creation transaction hashes",
-        "operationId": "plutus_script_list"
+        "operationId": "plutus_script_list",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/script_redeemers": {
@@ -3504,7 +3989,12 @@
         },
         "summary": "Script Redeemers",
         "description": "List of all redeemers for a given script hash",
-        "operationId": "script_redeemers"
+        "operationId": "script_redeemers",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/reference_script_utxos": {
@@ -3538,7 +4028,12 @@
         },
         "summary": "Reference Script UTxOs",
         "description": "List of all unspent UTxOs with a reference script matching given script hashes",
-        "operationId": "reference_script_utxos"
+        "operationId": "reference_script_utxos",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/script_utxos": {
@@ -3578,7 +4073,12 @@
         },
         "summary": "Script UTxOs",
         "description": "List of all UTxOs for a given script hash",
-        "operationId": "script_utxos"
+        "operationId": "script_utxos",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/datum_info": {
@@ -3612,7 +4112,12 @@
         },
         "summary": "Datum Information",
         "description": "List of datum information for given datum hashes",
-        "operationId": "datum_info"
+        "operationId": "datum_info",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     },
     "/ogmios": {
@@ -3640,7 +4145,12 @@
         },
         "summary": "Query Example",
         "description": "Query the current tip of the Network.\n\n<br>\n<div style=\"background-color: #f0f0f0b3; padding: 12px 0px 12px 12px;border-left: 5px solid  rgb(173, 44, 44);font-size: var(--font-size-regular);\">\nWe do support transparent forwarding for various methods from Ogmios, you can read about those <a href=\"#tag--Ogmios\">here</a>.\n</div>\n",
-        "operationId": "ogmios"
+        "operationId": "ogmios",
+        "security": [
+          {
+            "customAuth": []
+          }
+        ]
       }
     }
   },
@@ -4830,11 +5340,11 @@
       }
     },
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT",
-        "description": ""
+      "customAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-XRAY-GRAPH-AUTH",
+        "description": "Provide your custom authentication token here."
       }
     },
     "schemas": {
