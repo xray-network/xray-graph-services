@@ -14,3 +14,4 @@ Each service lives in its own folder with its own setup notes and Docker Compose
 - [kubo](kubo/README.md)
 - [traefik](traefik/README.md)
 - [koios-tiny-ts-client](koios-tiny-ts-client/README.md)
+- `volumes/` for persistent Docker data used by the local service stack

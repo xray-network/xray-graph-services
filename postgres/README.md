@@ -17,6 +17,6 @@ Provides the PostgreSQL instance used by the graph services.
    docker compose up -d
    ```
 
-## Depends On
+## Depends
 
-Nothing in this repository is required before PostgreSQL starts, but `cardano-db-sync` and `koios-tiny` both expect it to be available.
+- None

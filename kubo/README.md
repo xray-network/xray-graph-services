@@ -17,6 +17,6 @@ Runs an IPFS Kubo node for shared content storage and gateway access.
    docker compose up -d
    ```
 
-## Depends On
+## Depends
 
-This service is standalone and does not require another XRAY/Graph service to start first.
+- None

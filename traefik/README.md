@@ -11,6 +11,6 @@ Provides the reverse proxy and routing layer for services that attach to the sha
    docker compose up -d
    ```
 
-## Depends On
+## Depends
 
-Traefik is usually started after the backend services so it can discover them through the Docker provider.
+- None

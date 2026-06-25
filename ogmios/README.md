@@ -18,6 +18,6 @@ Provides the Ogmios API on top of the Cardano node socket.
    docker compose up -d
    ```
 
-## Depends On
+## Depends
 
-This service reads the Cardano node socket and config from the shared volumes created by `cardano-node`.
+- [cardano-node](../cardano-node)

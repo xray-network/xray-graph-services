@@ -19,6 +19,7 @@ Syncs chain data into PostgreSQL for the services that query Cardano data.
    docker compose up -d
    ```
 
-## Depends On
+## Depends
 
-`cardano-db-sync` expects PostgreSQL and the Cardano node volumes to be present before it starts.
+- [postgres](../postgres)
+- [cardano-node](../cardano-node)

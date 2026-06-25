@@ -18,6 +18,6 @@ Runs a Cardano node and exposes the socket and data volumes used by the rest of 
    docker compose up -d
    ```
 
-## Depends On
+## Depends
 
-This service is a dependency for `cardano-db-sync` and `ogmios`, and it also provides the chain data used by other services in the repository.
+- None

@@ -18,9 +18,12 @@ Runs the Koios Tiny API, the bundled RapiDoc UI, and the Ogmios proxy used by th
    docker compose up -d
    ```
 
-## Depends On
+## Depends
 
-`koios-tiny` depends on PostgreSQL for its data access and on Ogmios for transaction submission and chain queries.
+- [postgres](../postgres)
+- [cardano-node](../cardano-node)
+- [cardano-db-sync](../cardano-db-sync)
+- [ogmios](../ogmios)
 
 ## Included Services
 
